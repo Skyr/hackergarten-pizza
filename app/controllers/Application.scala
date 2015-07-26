@@ -26,4 +26,7 @@ class Application @Inject() (val messagesApi : MessagesApi,
       case None => Future.successful(Ok(views.html.login()))
     }
   }
+
+  override protected def onNotAuthenticated(request: RequestHeader) =
+    Some(Future.successful(Redirect(routes.Application.login)))
 }
