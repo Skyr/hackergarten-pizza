@@ -7,7 +7,7 @@ import play.api.libs.json.JsValue
 
 object MeetupProvider {
   val ID = "meetup"
-  val API = "http://whats.this.for?"
+  val API = "http://whats.this.for/?"
 }
 
 
