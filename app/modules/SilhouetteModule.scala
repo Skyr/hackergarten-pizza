@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util.{Clock, FingerprintGenerator}
 import com.mohiva.play.silhouette.api.{Environment, EventBus}
 import com.mohiva.play.silhouette.impl.authenticators.{SessionAuthenticator, SessionAuthenticatorService, SessionAuthenticatorSettings}
+import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
 import com.mohiva.play.silhouette.impl.util.DefaultFingerprintGenerator
 import models.{User, UserService}
 import models.impl.UserServiceImpl
@@ -44,5 +45,10 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
     val settings = configuration.underlying.as[SessionAuthenticatorSettings]("silhouette.authenticator")
     new SessionAuthenticatorService(settings, fingerprintGenerator, clock)
+  }
+
+  @Provides
+  def provideSocialProviderRegistry(): SocialProviderRegistry = {
+    SocialProviderRegistry(Seq())
   }
 }
