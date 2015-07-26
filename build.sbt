@@ -7,6 +7,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
+  "com.mohiva" %% "play-silhouette" % "3.0.0",
+  "net.codingwell" %% "scala-guice" % "4.0.0",
   jdbc,
   cache,
   ws,
