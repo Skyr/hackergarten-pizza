@@ -18,8 +18,8 @@ class Application @Inject() (val messagesApi : MessagesApi,
                              socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[User, SessionAuthenticator] {
 
-  def index = SecuredAction.async {
-    Future.successful(Ok(views.html.index()))
+  def index = SecuredAction.async { implicit request =>
+    Future.successful(Ok(views.html.index(request.identity)))
   }
 
   def login = UserAwareAction.async { implicit request =>
