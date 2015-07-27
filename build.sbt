@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
   "net.ceedubs" %% "ficus" % "1.1.2",
   "net.codingwell" %% "scala-guice" % "4.0.0",
   jdbc,
+  "com.typesafe.play" %% "play-slick" % "1.0.0",
+  "com.h2database" % "h2" % "1.4.187",
   cache,
   ws,
   specs2 % Test
