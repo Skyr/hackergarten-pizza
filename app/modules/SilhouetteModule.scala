@@ -1,15 +1,18 @@
 package modules
 
 import com.google.inject.{AbstractModule, Provides}
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AuthenticatorService
 import com.mohiva.play.silhouette.api.util._
 import com.mohiva.play.silhouette.api.{Environment, EventBus}
 import com.mohiva.play.silhouette.impl.authenticators.{SessionAuthenticator, SessionAuthenticatorService, SessionAuthenticatorSettings}
+import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.impl.providers.oauth2.state.{CookieStateProvider, CookieStateSettings}
-import com.mohiva.play.silhouette.impl.providers.{OAuth2Settings, OAuth2StateProvider, SocialProviderRegistry}
+import com.mohiva.play.silhouette.impl.providers.{OAuth2Info, OAuth2Settings, OAuth2StateProvider, SocialProviderRegistry}
+import com.mohiva.play.silhouette.impl.repositories.DelegableAuthInfoRepository
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, SecureRandomIDGenerator}
 import lib.silhouette.MeetupProvider
-import models.impl.UserServiceImpl
+import models.impl.{Oauth2InfoStorage, UserServiceImpl}
 import models.{User, UserService}
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
@@ -21,6 +24,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
 
   override def configure() = {
     bind[UserService].to[UserServiceImpl]
+    bind[DelegableAuthInfoDAO[OAuth2Info]].to[Oauth2InfoStorage]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[FingerprintGenerator].toInstance(new DefaultFingerprintGenerator(false))
     bind[EventBus].toInstance(EventBus())
@@ -38,6 +42,10 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
       Seq(),
       eventBus
     )
+  }
+
+  @Provides def provideAuthInfoRepository(oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info]): AuthInfoRepository = {
+    new DelegableAuthInfoRepository(oauth2InfoDAO)
   }
 
   @Provides

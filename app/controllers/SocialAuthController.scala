@@ -17,7 +17,7 @@ import scala.concurrent.Future
 class SocialAuthController @Inject() (val messagesApi : MessagesApi,
                                       val env: Environment[User, SessionAuthenticator],
                                       userService: UserService,
-                                      //authInfoRepository: AuthInfoRepository,
+                                      authInfoRepository: AuthInfoRepository,
                                       socialProviderRegistry: SocialProviderRegistry)
   extends Silhouette[User, SessionAuthenticator] {
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -30,7 +30,7 @@ class SocialAuthController @Inject() (val messagesApi : MessagesApi,
           case Right(authInfo) => for {
             profile <- p.retrieveProfile(authInfo)
             user <- userService.save(profile)
-            // authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
+            authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
             authenticator <- env.authenticatorService.create(profile.loginInfo)
             value <- env.authenticatorService.init(authenticator)
             result <- env.authenticatorService.embed(value, Redirect(routes.Application.index()))

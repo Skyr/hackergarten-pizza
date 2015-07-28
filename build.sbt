@@ -13,6 +13,7 @@ libraryDependencies ++= Seq(
   jdbc,
   "com.typesafe.play" %% "play-slick" % "1.0.0",
   "com.h2database" % "h2" % "1.4.187",
+  "org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
   cache,
   ws,
   specs2 % Test
