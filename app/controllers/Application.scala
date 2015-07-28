@@ -2,9 +2,10 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{Environment, Silhouette}
+import com.mohiva.play.silhouette.api.{LoginInfo, Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
+import com.mohiva.play.silhouette.impl.daos.DelegableAuthInfoDAO
+import com.mohiva.play.silhouette.impl.providers.{OAuth2Info, SocialProviderRegistry}
 import models.User
 import play.api._
 import play.api.i18n.MessagesApi
@@ -15,11 +16,17 @@ import scala.concurrent.Future
 
 class Application @Inject() (val messagesApi : MessagesApi,
                              val env: Environment[User, SessionAuthenticator],
-                             socialProviderRegistry: SocialProviderRegistry)
+                             socialProviderRegistry: SocialProviderRegistry,
+                             authInfoDao: DelegableAuthInfoDAO[OAuth2Info])
   extends Silhouette[User, SessionAuthenticator] {
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.index(request.identity)))
+    val loginInfo = LoginInfo("meetup", request.identity.providerKey)
+    authInfoDao.find(loginInfo).map { token =>
+      Ok(views.html.index(request.identity, token))
+    }
+    //Future.successful(Ok(views.html.index(request.identity)))
   }
 
   def login = UserAwareAction.async { implicit request =>

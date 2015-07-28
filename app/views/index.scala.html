@@ -1,7 +1,8 @@
-@(user: models.User)
+@(user: models.User, token:Option[com.mohiva.play.silhouette.impl.providers.OAuth2Info])
 
 @main("Hackergarten Pizza Order") {
     <h1>Hackergarten Pizza Order</h1>
     <p>Welcome, @user.name</p>
+    <p>Token is: @token</p>
     tbd…
 }
