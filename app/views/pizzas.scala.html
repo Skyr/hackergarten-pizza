@@ -1,0 +1,16 @@
+@import models.pizza.Pizza
+@(pizzas: List[Pizza])
+
+@main("Hackergarten Pizza Order") {
+    <div class="container">
+        <h1>Bestellbare Pizzen</h1>
+        <table>
+            @pizzas.map { pizza =>
+                <tr>
+                    <td>@pizza.name</td>
+                    <td><a href="#">Löschen</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+}

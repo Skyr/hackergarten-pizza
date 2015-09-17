@@ -36,6 +36,8 @@ class Application @Inject() (val messagesApi : MessagesApi,
     }
   }
 
+  def foo = Action { request => ??? }
+
   override protected def onNotAuthenticated(request: RequestHeader) =
     Some(Future.successful(Redirect(routes.Application.login)))
 }
